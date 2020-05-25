@@ -1,0 +1,10 @@
+Since minimax couldn't go past depth 3, next approach was to
+see if alpha-beta pruning gives us better results.
+
+Surprisingly, depth 4 performed even worse than 3 with h-0
+
+...
+
+To allow minimax*, we could have tried to generalize alpha-beta pruning similar to minimax,
+however, in average case, alpha beta pruning does not reduce the asymptotic branching 
+factor when used on a game with more than 1 players [Korf,  Multi-player alpha-beta pruning].

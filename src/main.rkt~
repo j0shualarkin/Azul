@@ -1,0 +1,197 @@
+#lang racket
+
+(require "player.rkt"
+         "state.rkt"
+         "factory.rkt"
+         "tile.rkt"
+         "board.rkt")
+
+(provide (all-defined-out))
+
+(random-seed 0)
+;; (display "Number of players: ")
+;; (define num-players (read))
+;; (newline)
+(define num-players 2)
+
+(define (divvy ls)
+  (let recur ((tick #f)
+              (ls ls)
+              (left empty)
+              (right empty))
+    (cond
+      ((empty? ls) (values left right))
+      (tick (recur (not tick) (cdr ls) left (cons (car ls) right)))
+      (else (recur (not tick) (cdr ls) (cons (car ls) left) right)))))
+
+(define test-inputs
+  '(#;(-1 red 3)
+    (-1 purple 3)
+    (-1 green 2)
+    (-1 yellow 4)
+    (5 green 2)
+    (4 blue 1)
+    (3 blue 1)
+    (2 blue 0)
+    (1 blue 0)))
+
+(define j/test
+  '((-1 green 0)
+    (-1 yellow 3)
+    (-1 blue 1)
+    (-1 purple 0)
+    (5 green 4)
+    (-1 red 2)
+    (2 green 4)
+    (4 red 2)
+    (-1 red 2)
+    (1 blue 1)
+    (3 blue 3)
+    (-1 green 4)
+    (-1 red 0)
+    (-1 blue 3)
+    (5 purple 1)
+    (-1 yellow 2)
+    (-1 purple 2)
+    (3 green 0)
+    (4 purple 3)
+    (-1 yellow 2)
+    (2 purple 3)
+    (1 red 1)
+    (3 purple 0)
+    (-1 blue 1)
+    (-1 red 2)
+    (-1 green 2)
+    (-1 purple 3)
+    (5 green 2)
+    (-1 yellow 4)
+    (3 blue 1)
+    (4 blue 1)
+    (1 blue 0)
+    (2 blue 0)))
+
+(define-values (p1-moves p2-moves) (divvy test-inputs))
+
+
+
+(define move-list empty)
+
+;; A Player is a function [Board State -> (List Factory Color Row)]
+
+;; creates a player 
+(define (playback-player moves)
+  (λ (state board)
+    (cond
+      ((empty? moves) (manual-player state board))
+      (else (begin0 (car moves) (set! moves (cdr moves)))))))
+
+(define (one-for-each num f) (build-list num (const f)))
+
+(define game-state
+  (let* ((start-bag (make-bag))
+         (players (one-for-each manual-player))
+       #;(players (list (playback-player p1-moves) (playback-player p2-moves)))
+         (boards  (one-for-each blank-board))
+         (num-factories (necessary-factories num-players)))
+    (let-values (((the-bag factory-set) (restock start-bag num-factories)))
+      (state num-players
+             players
+             boards
+             0
+             factory-set
+             num-factories
+
+             null
+             the-bag))))
+
+(define clean-up
+  (match-lambda
+    ((state np ps bs t fset nf seed bag)
+     (pretty-print bs) 
+     (define next-turn (index-where bs board-1-t))
+     (define-values (the-bag factory-set) (restock bag nf))
+     (define new-boards (map update-score bs))
+     (recur
+      (struct-copy state
+                   game-state
+                   (t next-turn)
+                   (bs new-boards)
+                   (bag (make-bag)) ; TODO: Technically not correct-- fix this!!
+                   (fset factory-set))))))
+
+
+(define make-a-move
+  (match-lambda 
+    ((state np ps bs t fset nf seed bag)
+     (pretty-print bs) 
+     (define current-player (list-ref ps t))
+     (define current-board  (list-ref bs t))
+     (define player-move    (current-player game-state board))
+     (match player-move
+       ((list move-factory-idx move-tile move-line-num)
+        (pretty-print (list "move == f: " move-factory-idx
+                            "tile (color): " move-tile
+                            "stageline: " move-line-num))
+        (set! move-list (cons player-move move-list))
+        (displayln move-list)
+        (define-values (new-board new-factory-set)
+          (add-tiles current-board
+                     fset
+                     (sub1 move-factory-idx)
+                     move-line-num
+                     move-tile))
+        (define new-state
+          (struct-copy state game-state
+                       (bs (list-set bs t new-board))
+                       (t (next-turn game-state))
+                       (fset new-factory-set)))
+        (recur new-state))))))
+
+
+(define (recur game-state)
+ (cond
+   ((round-over? game-state) => clean-up)
+   (else (make-a-move game-state))))
+(require racket/trace)
+(trace-define (azul) (recur game-state))
+(trace-define (go) (recur game-state)
+  #;
+              (let recur ((game-state game-state))
+                (cond
+                  ((round-over? game-state)
+                   (match game-state
+                     ((state np ps bs t fset nf seed bag)
+                      (pretty-print bs) 
+                      (define next-turn (index-where bs board-1-t))
+                      (define-values (the-bag factory-set) (restock bag nf))
+                      (define new-boards
+                        (map update-score bs))
+                      (recur
+                       (struct-copy state game-state
+                                    (t next-turn)
+                                    (bs new-boards)
+                                    (bag (make-bag)) ; TODO: Technically not correct-- fix this!!
+                                    (fset factory-set))))))
+                  (else
+                   (match game-state
+                     ((state np ps bs t fset nf seed bag)
+                      (pretty-print bs) 
+                      (define current-player (list-ref ps t))
+                      (define current-board (list-ref bs t))
+                      (define player-move (current-player game-state board))
+                      (match player-move
+                        ((list move-factory-idx move-tile move-line-num)
+                         (set! move-list (cons player-move move-list))
+                         #;(displayln move-list)
+                         (define-values (new-board new-factory-set)
+                           (add-tiles current-board
+                                      fset
+                                      (sub1 move-factory-idx)
+                                      move-line-num
+                                      move-tile))
+                         (define new-state
+                           (struct-copy state game-state
+                                        (bs (list-set bs t new-board))
+                                        (t (next-turn game-state))
+                                        (fset new-factory-set)))
+                         (recur new-state)))))))))

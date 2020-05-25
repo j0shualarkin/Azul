@@ -1,0 +1,7 @@
+    When we started the project we searched for previous work done with Azul and
+artificial intelligence. There we stumbled across discussion of Monte Carlo Tree Search, 
+neural network approaches, and the Rojo AI. The Rojo AI is an implementation of the game
+in JavaScript, along with a function that chooses the best move for a player.
+We implemented our AI in a really good programming language: Racket.
+We made a Racket implementation of the Rojo move picker in order to test our
+own AI against another one.

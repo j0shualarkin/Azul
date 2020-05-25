@@ -1,0 +1,41 @@
+
+#|  heuristic ideas
+          proximity to bonus --> 
+          5 of a color = +15
+          4 of a color = +10, 3 = +7, 2 = +4, 1 = +1
+          in a row? in a column?
+          full stage lines -->  
+             compute what the score would be if those tiles were placed
+          non-empty stage lines --> 
+          empty stage lines --> what colors are placed for those rows?
+          are the colors not placed available? 
+          these are points for potential scores
+          |#
+
+
+          #| for all non-empty stage lines, calculate the points for placing each one
+           (define p (get-tile-spot row t wall))
+          `(demand ,row
+                ,t
+                ,(+ (count-points p wall)
+                    (calculate-bonus (place-move p board)))
+                ,(- (car sg-line) missing)))))  
+(for*/list ([sg-line non-full-sglines]
+                 [t tiles]
+                 #:when (not (invalid-tile-move? t (sub1 (car sg-line)) board)))
+       (define row (sub1 (car sg-line)))
+       (define wall (board-wall board))
+       (define missing (if (cdr sg-line) (cadr sg-line) (add1 row)))
+       (define p (get-tile-spot row t wall))
+       `(demand ,row
+                ,t
+                ,(+ (count-points p wall)
+                    (calculate-bonus (place-move p board)))
+                ,(- (car sg-line) missing))))
+
+          |#
+
+
+;; count-points and calculate-bonus on place-move
+;; get-tile-spot 
+

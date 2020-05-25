@@ -1,0 +1,23 @@
+#lang racket
+
+(define test-vec (vector (vector #f 'A #f)
+                         (vector 'A #f 'B)
+                         (vector 'B #f #f)))
+
+(define (foo v)
+  (define bad-idea (make-vector 5 0))
+  (for ([vec (in-vector v)])
+    (for ([y (in-vector vec)])
+      (cond [(eqv? y 'A) (let ([a (vector-ref bad-idea 0)])
+                           (vector-set! bad-idea 0 (add1 a)))]
+            [(eqv? y 'B) (let ([a (vector-ref bad-idea 1)])
+                           (vector-set! bad-idea 1 (add1 a)))]
+            [else #f])))
+  
+  bad-idea)
+
+(foo test-vec)
+
+#;
+(check-equal? (foo test-vec)
+              (vector 2 2))

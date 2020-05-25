@@ -1,0 +1,23 @@
+For each non-full staging row:
+    For each color:
+    	compute the score (including bonus) if the row was filled with color
+	and also compute how many tiles are missing in the row.
+
+The above computation will have an estimate score for each color in each row.
+This computation will be called `demand`
+
+Then,
+For each factory:
+    For each color in the factory:
+    	For each demand with the same color:
+	    adjust demand's score if the factory is the mid factory and contains the `1` tile
+	    If amount of `color` tile in current factory are less than or equal to the missing tiles in demand's row:
+	       add (1.1*(number of tiles) + (0.1*missing tiles)) to the score ;; Not sure about these numbers
+	       If amount of tiles are equal to the amount of missing tiles, add 1 more point
+	    Else: deduct overflow points from the score
+	    Find the best line and best score among all demands. Call this the `bestDemand`
+
+	Remember the score, color in factory, factory, and the `bestDemand` from the above analysis happend. Call this computation 'tileSet'
+
+
+Pick the 'tileSet' with the best score and play that move

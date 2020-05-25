@@ -1,0 +1,8 @@
+Since a super high branching factor was making minimax useless (143 possible branches on a 1v1 game!),
+we took inspiration from Rojo-AI and tried to greedily pick a few moves from all possible valid moves.
+
+This move-filtering not only makes our implementation more efficient but makes our AI perfrom
+better than when we were not filtering any moves.
+
+With move-filtering enabled (with top 15 moves), alpha-beta pruning with a recursion depth of 4 beat Rojo-AI around
+80% of the time (n=x).

@@ -1,0 +1,4 @@
+For our AI, we started with the minimax algorithm we learned about in class.
+Azul is labeled as being a 2-4 player game, so we wanted to get AI that could win 4 player games.
+For generality, we extended the game to support an arbitrary amount of players and thus wanted to have
+a minimax that could work on more than 2 players. 

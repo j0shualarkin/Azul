@@ -1,0 +1,25 @@
+    For our AI, we started with the minimax algorithm we learned about in class.
+Azul is labeled as a 2-4 player game, so we wanted to get AI that could win 4 player games.
+Really, we want it to win `n` player games, so we extended the game to support an arbitrary
+amount of players. This lead to having a version of minimax that could work on games with more than 2 players.
+Instead of returning one move and one value, extended minimax returns a move and
+a list of values -- determing the best score for all the players in the game.
+
+    With the extended minimax, we have to determine a way for one player to compete with the other players.
+This introduced a family of functions we call the `g` functions. During minimax, you have a variable
+that keeps track of the best move for the current player, and we update this if a potential move
+is of greater value than the best so far. A `g` function determines whether a potential move is good
+enough to replace the best move. The `g` function needs to be given a list of competeing values for each player.
+This means the current player has a starting competing value of -infinity and the others (competitors) have +infinity.
+Each iteration of minimax updates the current player's best score, and upon termination we have the best possible
+scores for every player in the game.
+
+    We came up with a few different ideas for `g` functions.
+To do it's job, `g` needs to know all of the players' boards and whose turn it is.
+Each `g` function has a similarity in that it takes the difference of the current player's best value
+and some computation on the other players' best values.
+Instances of `g` function:
+  - sum the other players' values
+  - average the other players' values
+  - take the max of the other players' values
+

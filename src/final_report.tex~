@@ -1,0 +1,100 @@
+\documentclass[12pt]{article}
+
+% set font to times new roman
+
+\usepackage{listings}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{indentfirst}
+\usepackage{layout}
+\usepackage{hanging}
+\usepackage{setspace}
+\usepackage{mathtools}
+
+\DeclarePairedDelimiter\qb{\lvert}{\rangle}
+
+\def\tit{Azul AI}
+\def\term{Fall 2019}
+\def\auths{Nick Faro \& Turab Jafri \& Joshua Larkin}
+\def\course{B351}
+
+\doublespacing
+
+\lhead{\term}
+\chead{\tit}
+\rhead{\thepage}
+\cfoot{}
+
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\tit}}\\
+    \normalsize\vspace{0.1in}\small{\course \ : \term }\\
+    \vspace{0.1in}\large{\textit{\auths}}
+    \vspace{3in}
+}
+
+\date{}
+
+
+\newcommand{\icol}[1]{
+  \left(\begin{smallmatrix}#1\end{smallmatrix}\right)
+}
+
+
+\newcommand{\n}{\newline}
+\renewcommand\headrulewidth{0.4pt}
+\fancyheadoffset{0.5 cm}
+
+\oddsidemargin 0pt
+\evensidemargin 0pt
+\topmargin -.3in
+\headsep 20pt
+%\footskip 20pt
+\textheight 8.5in
+\textwidth 6.25in
+
+\setlength\topmargin{0pt}
+\addtolength\topmargin{-\headheight}
+\addtolength\topmargin{-\headsep}
+\setlength\oddsidemargin{0pt}
+\setlength\textwidth{\paperwidth}
+\addtolength\textwidth{-2in}
+\setlength\textheight{\paperheight}
+\addtolength\textheight{-2in}
+
+\begin{document}
+
+
+\maketitle
+\pagebreak
+
+% What is quantum computation
+% How does it undermine modern crypto
+% proposed fixes in post-quantum scenario
+
+\section{Introduction}
+
+
+\section{Approach}
+
+
+\section{Survey of Existing Techniques/Solutions}
+ 
+% =========== what is quantum computing  ===========
+\subsection{What is Quantum Computing?}
+
+
+  % =========== how Quantum Crypto undermines Modern Crypto  ===========
+\subsection{How Quantum Cryptography undermines Modern Cryptography} 
+
+   
+
+  % =========== proposed responses in the post-quantum world ===========
+   \subsection{Proposed Responses in the Post-Quantum World}
+
+\section{Suggestions}
+
+\section{Conclusions}
+
+\end{document}
